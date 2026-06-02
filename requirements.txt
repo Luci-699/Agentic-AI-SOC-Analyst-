@@ -1,0 +1,32 @@
+# =============================================================================
+# Agentic SOC Analyst -- Python Dependencies
+# =============================================================================
+
+# Web framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+
+# Authentication
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+python-multipart>=0.0.6
+
+# HTTP client (used by health probes and connectors)
+requests>=2.31.0
+urllib3>=2.0.0
+
+# Database
+psycopg2-binary>=2.9.0
+
+# Vector database
+chromadb>=0.4.0
+
+# Templating (FastAPI docs / email)
+jinja2>=3.1.0
+
+# Environment
+python-dotenv>=1.0.0
+
+# Graph orchestration
+langgraph>=0.0.10

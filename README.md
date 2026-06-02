@@ -1,121 +1,129 @@
-# Agentic SOC Analyst 🛡️
+# Agentic AI SOC Analyst 🛡️⚡
 
-An AI-powered Security Operations Center (SOC) analyst built on Wazuh SIEM. The system autonomously ingests security alerts, investigates threats, enriches findings with threat intelligence, and recommends or executes response actions.
+[![Python 3.11](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104.0-green.svg)](https://fastapi.tiangolo.com/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Active-blueviolet.svg)](https://github.com/langchain-ai/langgraph)
+[![HTMX](https://img.shields.io/badge/HTMX-1.9.5-blue.svg)](https://htmx.org/)
+[![Docker](https://img.shields.io/badge/Docker-Desktop-blue.svg)](https://www.docker.com/)
 
-## Architecture
+An autonomous, production-grade **Security Operations Center (SOC) Analyst** built on top of **Wazuh SIEM**. The system intercepts security events from your Windows host, processes them through a stateful multi-agent LangGraph pipeline, enriches them with multi-vendor threat intelligence, and presents a premium, real-time response dashboard with Human-in-the-Loop (HITL) active containment.
+
+---
+
+## 🌌 The Dashboard Aesthetic
+
+The SOC frontend is built using a custom-engineered **"Geospatial Luminescence"** dark mode theme (based on Stitch design tokens):
+*   **Color Palette**: Deep Space Navy background (`#0e1322`) and translucent card surfaces (`rgba(22, 27, 43, 0.7)`) with backdrop blurs.
+*   **Signature Lighting**: Active elements glow with Electric Cyan (`#00fbfb`) and Neon Purple (`#ecb1ff`).
+*   **Dynamic Interactions**: CSS transitions powered by cubic-bezier curves combined with **HTMX** for smooth, zero-refresh single-page transitions.
+
+---
+
+## 🛠️ Key Capabilities & Shield Mechanisms
+
+### 🧠 1. Multi-Agent LangGraph Triage
+Instead of single-prompt AI reasoning, the system orchestrates **6 specialized collaborating agents** in a directed acyclic graph (DAG):
+1.  **Gate Agent**: Performs prompt injection defense and parses raw logs into facts.
+2.  **Triage Agent**: Classifies attack categories (ransomware, brute force, etc.) and gauges severity.
+3.  **Endpoint Agent**: Polls live process trees and FIM records from the host via Wazuh APIs.
+4.  **Threat Intel Agent**: Queries VT, AbuseIPDB, and AlienVault OTX in parallel.
+5.  **Correlation Agent**: Scans database history (Postgres) and past incident reports (ChromaDB).
+6.  **Decision Agent**: Synthesizes all data, writes the markdown triage report, and issues containment requests.
+
+### 🛡️ 2. Dual-LLM Injection Defense
+To secure the AI against log-injection attacks:
+*   **Stage 1: Heuristic Filter**: Stops common override patterns before LLM execution.
+*   **Stage 2: Quarantined JSON Fact Extraction**: An isolated LLM extracts facts to JSON without reasoning.
+*   **Stage 3: Privileged Evaluation**: The decision LLM only sees sanitized facts, making prompt injection impossible.
+
+### 🔌 3. Decoupled Cross-Vendor Connectors
+Zero-config modular connectors (Wazuh, AWS GuardDuty, Okta, Microsoft Defender) that can be toggled between `MOCK` and `LIVE` collection in real-time from the settings panel.
+
+---
+
+## 🧭 System Architecture
 
 ```
-Wazuh SIEM → Alert Collector → PostgreSQL → Multi-Agent AI → SOC Dashboard
-                                                ↑
-                                    ChromaDB (Incident Memory)
+                                  +-----------------------+
+                                  |   Wazuh Agent (Host)  |
+                                  +-----------------------+
+                                              |
+                                              v
++------------------+                    +-----------+
+| Mock Connectors  | --(10s Poll)-----> |  FastAPI  | <---(HTMX Poll)--- +----------------+
+| (Okta/AWS/Def)   |                    |  Backend  |                    | Jinja2 Web UI  |
++------------------+                    +-----------+                    | (Port 8080)    |
+                                         |         |                     +----------------+
+                   +---------------------+         +------------+
+                   v                                            v
+     +---------------------------+                +----------------------------+
+     | PostgreSQL (Partitioned)  |                |   LangGraph Agent Pipeline |
+     | - Normalised Alerts Table |                |   - Gate / Triage / Intel  |
+     | - Response Actions Queue  |                |   - Postgres & ChromaDB Mem |
+     +---------------------------+                +----------------------------+
 ```
 
-## Quick Start (Phase 1)
+---
+
+## 🚀 Quick Start Guide
 
 ### Prerequisites
-- Windows 10/11 with WSL2 enabled
-- Docker Desktop installed and running
-- PowerShell 7+ (or Windows PowerShell 5.1)
-- 8GB+ RAM recommended (Wazuh needs ~4GB)
+*   Windows 10/11 with WSL2 enabled.
+*   Docker Desktop running.
+*   Python 3.11+ installed.
 
-### 1. Clone & Setup
-
-```powershell
-# Navigate to project
-cd "Agentic AI SOC Analyst"
-
-# Copy environment config
-cp .env.example .env
-
-# Run setup (as Administrator)
-.\setup.ps1
-```
-
-### 2. Enroll Your Windows Machine as a Wazuh Agent
-
-```powershell
-.\scripts\enroll-agent.ps1
-```
-
-### 3. Verify Everything Is Running
-
-```powershell
-.\scripts\health-check.ps1
-```
-
-### 4. Open the Dashboard
-
-```
-https://localhost:443
-Username: admin
-Password: SecretPassword
-```
-
----
-
-## Project Phases
-
-| Phase | Description | Status |
-|-------|-------------|--------|
-| 1 | Security Monitoring Foundation (Wazuh Stack) | 🚧 In Progress |
-| 2 | Generate Security Events | ⏳ Pending |
-| 3 | Wazuh Data Flow & API | ⏳ Pending |
-| 4 | Alert Collection Service | ⏳ Pending |
-| 5 | First AI Analyst | ⏳ Pending |
-| 6 | Investigation Tools (VT, AbuseIPDB, OTX) | ⏳ Pending |
-| 7 | Multi-Step Investigation Workflows | ⏳ Pending |
-| 8 | Multi-Agent SOC Architecture | ⏳ Pending |
-| 9 | Incident Memory | ⏳ Pending |
-| 10 | Automated Response | ⏳ Pending |
-| 11 | SOC Dashboard (React) | ⏳ Pending |
-| 12 | Capstone Integration | ⏳ Pending |
-
----
-
-## Service Ports
-
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| Wazuh Dashboard | https://localhost:443 | admin / SecretPassword |
-| Wazuh API | https://localhost:55000 | wazuh-wui / MyS3cr37P450r.*- |
-| Wazuh Indexer | https://localhost:9200 | admin / SecretPassword |
-| PostgreSQL | localhost:5432 | soc_user / soc_password |
-| ChromaDB | http://localhost:8001 | — |
-| FastAPI (Phase 4+) | http://localhost:8000 | — |
-| React Dashboard (Phase 11) | http://localhost:3000 | — |
-
----
-
-## Common Commands
-
-```powershell
-# Start all services
+### 1. Boot up the Database & SIEM Stack
+Deploy PostgreSQL, ChromaDB, and the Wazuh stack via Docker Compose:
+```bash
 docker-compose up -d
-
-# Stop all services
-docker-compose down
-
-# View logs
-docker-compose logs -f wazuh.manager
-docker-compose logs -f wazuh.indexer
-
-# Restart a service
-docker-compose restart wazuh.manager
-
-# Check container status
-docker-compose ps
-
-# Enter manager container
-docker exec -it wazuh.manager bash
 ```
 
-## Tech Stack
+### 2. Set Up the Local Environment
+Configure python dependencies:
+```bash
+# Install packages
+pip install -r requirements.txt
+```
 
-- **SIEM**: Wazuh 4.7.3 (Manager + Indexer + Dashboard)
-- **Alert DB**: PostgreSQL 16
-- **Vector DB**: ChromaDB
-- **AI Framework**: LangGraph + CrewAI
-- **LLM**: Ollama (local, free)
-- **Backend**: FastAPI
-- **Frontend**: React + Vite
-- **Threat Intel**: VirusTotal, AbuseIPDB, AlienVault OTX
+### 3. Run the Dashboard & Backend Server
+Start the FastAPI server:
+```bash
+python -m uvicorn soc_analyst.api.main:app --reload --host 127.0.0.1 --port 8080
+```
+Open **[http://127.0.0.1:8080](http://127.0.0.1:8080)** in your browser.
+*   **Username**: `admin`
+*   **Password**: `socadmin2026`
+
+---
+
+## ⚡ Try Live Threat Simulations!
+
+To watch the automated threat-hunting pipeline execute in real-time, open a separate **Administrator PowerShell** window and run one of our built-in simulator scripts:
+
+*   **Local Account Creation** (Local Privilege Escalation):
+    ```powershell
+    net user securitytest operatorpass123! /add
+    ```
+*   **Base64 Encoded Script Execution** (Defense Evasion):
+    ```powershell
+    powershell -EncodedCommand JgAgACcAdwByAGkAdABlAC0AaABvAHMAdAAnACAAJwBIAGUAbABsAG8AIABmAHIAbwBtACAAQQBJACcADwA=
+    ```
+*   **Suspicious Scheduled Task Creation** (Malicious Persistence):
+    ```powershell
+    schtasks /create /tn "DiagnosticPatch" /tr "cmd.exe /c echo 'patching'" /sc daily /st 12:00
+    ```
+
+*Watch the alert pop up on your dashboard within 10 seconds, inspect the generated AI Triage Report containing your host's running processes, and approve the containment actions in the Response Center!*
+
+---
+
+## ⚙️ Service Ports Map
+
+| Service | Port / URL | Credentials |
+|---------|------------|-------------|
+| **SOC Dashboard Web** | `http://127.0.0.1:8080` | `admin` / `socadmin2026` |
+| **Wazuh Dashboard** | `https://localhost:443` | `admin` / `socadmin2026` |
+| **Wazuh REST API** | `https://localhost:56000` | `wazuh-wui` / `MyS3cr37P450r.*-` |
+| **PostgreSQL** | `localhost:5432` | `soc_user` / `soc_password` |
+| **ChromaDB Vector** | `localhost:8001` | — |
+| **Docker Registry Image** | `madmaxboi/agenticaisocanalyst` | — |

@@ -1,5 +1,5 @@
 """
-Centralized configuration for the Agentic SOC Analyst.
+Centralized configuration for HallucinatingCrusaders.
 All secrets and connection details in one place.
 Override via environment variables.
 """
@@ -104,7 +104,7 @@ class LLMConfig:
 @dataclass
 class AppConfig:
     """Top-level application configuration."""
-    app_name: str = "Agentic SOC Analyst"
+    app_name: str = "HallucinatingCrusaders"
     version: str = "0.1.0"
     debug: bool = os.getenv("DEBUG", "true").lower() == "true"
     log_level: str = os.getenv("LOG_LEVEL", "INFO")

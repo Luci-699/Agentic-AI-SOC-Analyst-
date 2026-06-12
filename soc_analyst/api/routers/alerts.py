@@ -1,5 +1,5 @@
 """
-Alert API endpoints for the Agentic SOC Analyst.
+Alert API endpoints for HallucinatingCrusaders.
 
 Provides CRUD-like access to the normalised alert store:
 

@@ -1,5 +1,5 @@
 """
-Health / self-monitoring endpoint for the Agentic SOC Analyst.
+Health / self-monitoring endpoint for HallucinatingCrusaders.
 
 Reports the operational status of every subsystem the platform depends on:
 

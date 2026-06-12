@@ -1,5 +1,5 @@
 """
-Provider-agnostic LLM router for the Agentic SOC Analyst.
+Provider-agnostic LLM router for HallucinatingCrusaders.
 
 Supports Gemini, OpenAI, Anthropic, Ollama, and a deterministic MOCK
 provider for testing without API keys. All HTTP calls use ``requests``

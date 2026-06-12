@@ -624,7 +624,7 @@ async def _run() -> None:
         datefmt="%Y-%m-%d %H:%M:%S",
     )
     logger.info("=" * 60)
-    logger.info("  Agentic SOC Analyst -- Alert Collector")
+    logger.info("  HallucinatingCrusaders -- Alert Collector")
     logger.info("  Poll interval: %ds", settings.collector.poll_interval_seconds)
     logger.info("=" * 60)
 

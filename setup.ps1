@@ -1,5 +1,5 @@
 # =============================================================================
-# Agentic SOC Analyst - Windows Setup Script (Phase 1)
+# HallucinatingCrusaders - Windows Setup Script (Phase 1)
 # Run this script in PowerShell as Administrator
 # It will: check prerequisites, generate certs, and start the Wazuh stack
 # =============================================================================
@@ -9,7 +9,7 @@ $StackRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Cyan
-Write-Host "  Agentic SOC Analyst - Phase 1 Setup" -ForegroundColor Cyan
+Write-Host "  HallucinatingCrusaders - Phase 1 Setup" -ForegroundColor Cyan
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host ""
 

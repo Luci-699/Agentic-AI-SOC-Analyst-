@@ -1,5 +1,5 @@
 # =============================================================================
-# Agentic SOC Analyst -- Python Dependencies
+# HallucinatingCrusaders -- Python Dependencies
 # =============================================================================
 
 # Web framework

@@ -1,5 +1,5 @@
 """
-JWT authentication module for the Agentic SOC Analyst API.
+JWT authentication module for the HallucinatingCrusaders API.
 
 Provides token creation, verification, and a FastAPI dependency that
 extracts the current user from the ``Authorization: Bearer <token>`` header.

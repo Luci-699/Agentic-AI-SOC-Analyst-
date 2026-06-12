@@ -1,5 +1,5 @@
 """
-FastAPI application entry-point for the Agentic SOC Analyst API.
+FastAPI application entry-point for the HallucinatingCrusaders API.
 
 Responsibilities
 ----------------
@@ -58,7 +58,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     * **Startup** -- instantiate and start the ``AlertCollector``.
     * **Shutdown** -- gracefully stop the collector.
     """
-    logger.info("Starting Agentic SOC Analyst API v%s ...", settings.version)
+    logger.info("Starting HallucinatingCrusaders API v%s ...", settings.version)
 
     collector = build_default_collector()
     await collector.start()
@@ -79,7 +79,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 # ---------------------------------------------------------------------------
 
 app = FastAPI(
-    title="Agentic SOC Analyst API",
+    title="HallucinatingCrusaders API",
     description=(
         "REST API for the Agentic AI SOC Analyst platform.  "
         "Provides alert management, health monitoring, and authentication."

@@ -1,5 +1,5 @@
 """
-Analysis API endpoints for the Agentic SOC Analyst.
+Analysis API endpoints for HallucinatingCrusaders.
 
 Provides manual and batch analysis triggers, pipeline metrics, and
 dead-letter queue management:

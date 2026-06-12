@@ -49,7 +49,7 @@ function Write-Status {
 # =========================================================================
 # Pre-flight Checks
 # =========================================================================
-Write-Banner "Agentic SOC Analyst -- Phase 2 Attack Simulations"
+Write-Banner "HallucinatingCrusaders -- Phase 2 Attack Simulations"
 
 # Check if running as Administrator
 $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)

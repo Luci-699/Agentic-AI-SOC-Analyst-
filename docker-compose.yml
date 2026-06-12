@@ -1,5 +1,5 @@
 # =============================================================================
-# Agentic SOC Analyst — Wazuh Stack (Phase 1)
+# HallucinatingCrusaders — Wazuh Stack (Phase 1)
 # Wazuh Manager + Indexer (OpenSearch) + Dashboard
 # Run: docker-compose up -d
 # Dashboard: https://localhost:443   admin / SecretPassword

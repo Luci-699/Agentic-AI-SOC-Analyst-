@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 # OAuth2 scheme (points to the token endpoint)
 # ---------------------------------------------------------------------------
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token", auto_error=False)
 
 # ---------------------------------------------------------------------------
 # Pydantic response models
@@ -146,8 +146,14 @@ def verify_token(token: str) -> Dict[str, Any]:
 from fastapi import Request
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)) -> Dict[str, Any]:
+async def get_current_user(
+    request: Request,
+    token: Optional[str] = Depends(oauth2_scheme),
+) -> Dict[str, Any]:
     """FastAPI dependency that resolves the authenticated user from the JWT.
+
+    First checks the Authorization header (via oauth2_scheme). If not present,
+    falls back to checking the 'access_token' cookie.
 
     Usage::
 
@@ -160,6 +166,15 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> Dict[str, Any
     dict
         Decoded JWT payload (contains at least ``sub`` with the username).
     """
+    if not token:
+        token = request.cookies.get("access_token")
+
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     return verify_token(token)
 
 

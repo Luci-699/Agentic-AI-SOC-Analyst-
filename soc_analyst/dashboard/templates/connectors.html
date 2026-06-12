@@ -152,9 +152,9 @@
                         <span style="font-size: 0.75rem; color: var(--text-muted);">Identity & Access Management</span>
                     </div>
                 </div>
-                <div id="mode-badge-mock_okta">
-                    <span class="neon-badge {% if connector_modes.mock_okta == 'live' %}neon-badge-cyan{% else %}neon-badge-purple{% endif %}">
-                        {{ connector_modes.mock_okta.upper() }} MODE
+                <div id="mode-badge-okta">
+                    <span class="neon-badge {% if connector_modes.okta == 'live' %}neon-badge-cyan{% else %}neon-badge-purple{% endif %}">
+                        {{ connector_modes.okta.upper() }} MODE
                     </span>
                 </div>
             </div>
@@ -176,8 +176,8 @@
         <div class="connector-actions">
             <span style="font-size: 0.8rem; color: var(--text-muted);">Toggle to simulated sink mode.</span>
             <button class="switch-mode-btn" 
-                    hx-post="/dashboard/connectors/toggle/mock_okta"
-                    hx-target="#mode-badge-mock_okta"
+                    hx-post="/dashboard/connectors/toggle/okta"
+                    hx-target="#mode-badge-okta"
                     hx-swap="innerHTML">
                 <i class="fa-solid fa-shuffle"></i> Toggle Mode
             </button>

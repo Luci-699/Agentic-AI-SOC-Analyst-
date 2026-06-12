@@ -58,6 +58,13 @@ class ChromaConfig:
 
 
 @dataclass
+class OktaConfig:
+    """Okta API configuration."""
+    domain: str = os.getenv("OKTA_DOMAIN", "")
+    api_token: str = os.getenv("OKTA_API_TOKEN", "")
+    verify_ssl: bool = os.getenv("OKTA_VERIFY_SSL", "true").lower() == "true"
+
+@dataclass
 class AuthConfig:
     """JWT Authentication configuration."""
     secret_key: str = os.getenv("JWT_SECRET_KEY", "soc-analyst-dev-secret-change-in-production")
@@ -78,7 +85,7 @@ class CollectorConfig:
     enabled_connectors: list = field(default_factory=lambda: [
         "wazuh",
         "mock_guardduty",
-        "mock_okta",
+        "okta",
         "mock_defender",
     ])
 
@@ -111,6 +118,7 @@ class AppConfig:
     auth: AuthConfig = field(default_factory=AuthConfig)
     collector: CollectorConfig = field(default_factory=CollectorConfig)
     llm: LLMConfig = field(default_factory=LLMConfig)
+    okta: OktaConfig = field(default_factory=OktaConfig)
 
 
 # Singleton

@@ -585,12 +585,14 @@ def build_default_collector() -> AlertCollector:
     from soc_analyst.collector.connectors.mock_defender import MockDefenderConnector
     from soc_analyst.collector.connectors.mock_guardduty import MockGuardDutyConnector
     from soc_analyst.collector.connectors.mock_okta import MockOktaConnector
+    from soc_analyst.collector.connectors.okta import OktaConnector
     from soc_analyst.collector.connectors.wazuh import WazuhConnector
 
     _registry = {
         "wazuh": WazuhConnector,
         "mock_guardduty": MockGuardDutyConnector,
         "mock_okta": MockOktaConnector,
+        "okta": OktaConnector,
         "mock_defender": MockDefenderConnector,
     }
 

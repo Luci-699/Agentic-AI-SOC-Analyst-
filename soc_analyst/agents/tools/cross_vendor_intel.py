@@ -48,8 +48,8 @@ def _severity_value(alert: NormalizedAlert) -> int:
 async def search_okta_user(email_or_username: str) -> Dict[str, Any]:
     """Search Okta alerts for a specific user (email or username).
 
-    Queries alerts from the ``mock_okta`` source and filters on the
-    ``username`` field using a case-insensitive comparison.
+    Queries alerts from the ``okta`` (live) or ``mock_okta`` source and
+    filters on the ``username`` field using a case-insensitive comparison.
 
     Args:
         email_or_username: The email address or username to search for.
@@ -61,7 +61,10 @@ async def search_okta_user(email_or_username: str) -> Dict[str, Any]:
     logger.info("Searching Okta alerts for user: %s", email_or_username)
 
     collector = AlertCollector()
-    okta_alerts: List[NormalizedAlert] = collector.get_alerts_by_source("mock_okta")
+    # Try live connector first, fall back to mock
+    okta_alerts: List[NormalizedAlert] = collector.get_alerts_by_source("okta")
+    if not okta_alerts:
+        okta_alerts = collector.get_alerts_by_source("mock_okta")
 
     query_lower = email_or_username.lower()
     matches = [

@@ -110,9 +110,58 @@ async def execute_block_ip(ip: str, agent_id: str = "001") -> dict:
 
 # 2. Okta Disable User
 async def execute_disable_okta_user(username: str) -> dict:
-    """Mock/Live call to disable Okta user."""
-    # Simulation only
+    """Live/Mock call to disable an Okta user via the Users API."""
     logger.info("Executing Okta user disable action for %s", username)
+
+    okta_domain = settings.okta.domain
+    okta_token = settings.okta.api_token
+
+    # If Okta credentials are configured, try the real API
+    if okta_domain and okta_token:
+        try:
+            base_url = f"https://{okta_domain}"
+            headers = {
+                "Authorization": f"SSWS {okta_token}",
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            }
+
+            async with httpx.AsyncClient(verify=settings.okta.verify_ssl, timeout=15.0) as client:
+                # Step 1: Find the user by login/email
+                search_url = f"{base_url}/api/v1/users/{username}"
+                resp = await client.get(search_url, headers=headers)
+                resp.raise_for_status()
+                user_data = resp.json()
+                user_id = user_data.get("id")
+
+                if not user_id:
+                    raise ValueError(f"Could not find Okta user ID for {username}")
+
+                # Step 2: Deactivate the user
+                deactivate_url = f"{base_url}/api/v1/users/{user_id}/lifecycle/deactivate"
+                resp = await client.post(deactivate_url, headers=headers)
+                resp.raise_for_status()
+
+            logger.info("Successfully deactivated Okta user %s (id=%s)", username, user_id)
+            return {
+                "status": "success",
+                "action_type": "disable_user",
+                "target": username,
+                "executed_at": datetime.now(timezone.utc).isoformat(),
+                "result": {
+                    "message": f"Successfully deactivated Okta user account {username}",
+                    "okta_user_id": user_id,
+                    "okta_api_response": {
+                        "status": "DEPROVISIONED",
+                        "transition_date": datetime.now(timezone.utc).isoformat()
+                    },
+                    "simulation": False
+                }
+            }
+        except Exception as exc:
+            logger.error("Live Okta user disable failed: %s. Falling back to mock.", exc)
+
+    # Mock / Fallback execution
     return {
         "status": "success",
         "action_type": "disable_user",

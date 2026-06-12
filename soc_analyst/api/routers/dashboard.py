@@ -181,7 +181,7 @@ async def dashboard_connectors(request: Request):
         collector.connector_modes = {
             "wazuh": "live",
             "mock_guardduty": "mock",
-            "mock_okta": "mock",
+            "okta": "live",
             "mock_defender": "mock",
         }
 
@@ -212,7 +212,7 @@ async def toggle_connector(request: Request, connector: str):
         collector.connector_modes = {
             "wazuh": "live",
             "mock_guardduty": "mock",
-            "mock_okta": "mock",
+            "okta": "live",
             "mock_defender": "mock",
         }
 

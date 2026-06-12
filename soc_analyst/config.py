@@ -95,7 +95,7 @@ class LLMConfig:
     """LLM provider configuration for the Dual-LLM Analyst Pipeline."""
     provider: str = os.getenv("LLM_PROVIDER", "mock")
     model_name: str = os.getenv("LLM_MODEL", "gemini-2.0-flash")
-    api_key: str = os.getenv("LLM_API_KEY", "")
+    api_key: str = os.getenv("GEMINI_API_KEY", os.getenv("LLM_API_KEY", ""))
     base_url: str = os.getenv("LLM_BASE_URL", "")
     temperature: float = float(os.getenv("LLM_TEMPERATURE", "0.1"))
     max_tokens: int = int(os.getenv("LLM_MAX_TOKENS", "2048"))

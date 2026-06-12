@@ -100,6 +100,49 @@ class PostgresStore:
                 cur.execute("ALTER TABLE alerts ADD COLUMN IF NOT EXISTS analyst_verdict VARCHAR(64);")
                 cur.execute("ALTER TABLE alerts ADD COLUMN IF NOT EXISTS analyst_reasoning TEXT;")
                 cur.execute("ALTER TABLE alerts ADD COLUMN IF NOT EXISTS tags TEXT[];")
+                
+                # Ensure column widths are large enough for other providers (GuardDuty, Defender, etc.)
+                cur.execute("DROP VIEW IF EXISTS v_active_alerts CASCADE;")
+                cur.execute("DROP VIEW IF EXISTS v_open_investigations CASCADE;")
+                cur.execute("DROP VIEW IF EXISTS v_pending_approvals CASCADE;")
+                
+                cur.execute("ALTER TABLE alerts ALTER COLUMN rule_id TYPE VARCHAR(128);")
+                cur.execute("ALTER TABLE alerts ALTER COLUMN agent_id TYPE VARCHAR(128);")
+                cur.execute("ALTER TABLE alerts ALTER COLUMN protocol TYPE VARCHAR(64);")
+
+                cur.execute("""
+                    CREATE OR REPLACE VIEW v_active_alerts AS
+                    SELECT
+                        id, timestamp, rule_id, rule_description, rule_level,
+                        agent_name, agent_ip, src_ip, username, investigation_status
+                    FROM alerts
+                    WHERE investigation_status IN ('new', 'triaged')
+                    ORDER BY rule_level DESC, timestamp DESC;
+                """)
+                cur.execute("""
+                    CREATE OR REPLACE VIEW v_open_investigations AS
+                    SELECT
+                        i.id, i.started_at, i.classification, i.severity, i.status,
+                        a.rule_description AS trigger_rule,
+                        a.agent_name, a.src_ip,
+                        ARRAY_LENGTH(i.related_alert_ids, 1) AS related_count
+                    FROM investigations i
+                    JOIN alerts a ON a.id = i.trigger_alert_id
+                    WHERE i.status NOT IN ('closed')
+                    ORDER BY i.started_at DESC;
+                """)
+                cur.execute("""
+                    CREATE OR REPLACE VIEW v_pending_approvals AS
+                    SELECT
+                        r.id, r.action_type, r.target, r.reason,
+                        r.created_at, i.severity,
+                        a.rule_description
+                    FROM response_actions r
+                    JOIN investigations i ON i.id = r.investigation_id
+                    JOIN alerts a ON a.id = r.alert_id
+                    WHERE r.approval_status = 'pending'
+                    ORDER BY i.severity DESC, r.created_at ASC;
+                """)
 
                 # Check if alerts is already partitioned (relkind = 'p' in pg_class)
                 cur.execute("SELECT relkind FROM pg_class WHERE relname = 'alerts'")
@@ -130,19 +173,19 @@ class PostgresStore:
                         wazuh_id                VARCHAR(128),
                         timestamp               TIMESTAMPTZ NOT NULL,
                         source                  VARCHAR(64) DEFAULT 'wazuh' NOT NULL,
-                        rule_id                 VARCHAR(16) NOT NULL,
+                        rule_id                 VARCHAR(128) NOT NULL,
                         rule_description        TEXT NOT NULL,
                         rule_level              SMALLINT NOT NULL,
                         rule_groups             TEXT[],
                         mitre_ids               TEXT[],
-                        agent_id                VARCHAR(16),
+                        agent_id                VARCHAR(128),
                         agent_name              VARCHAR(128),
                         agent_ip                VARCHAR(45),
                         src_ip                  VARCHAR(45),
                         dst_ip                  VARCHAR(45),
                         src_port                INTEGER,
                         dst_port                INTEGER,
-                        protocol                VARCHAR(16),
+                        protocol                VARCHAR(64),
                         username                VARCHAR(128),
                         raw_data                JSONB NOT NULL,
                         location                TEXT,

@@ -144,7 +144,7 @@ async def run_dashboard_tests():
         for view_path in views:
             resp = client.get(view_path)
             assert resp.status_code == 200, f"Failed to render dashboard view {view_path}: {resp.status_code}"
-            assert "ANTIGRAVITY" in resp.text, f"View {view_path} missing brand wrapper signature"
+            assert "HallucinatingCrusaders" in resp.text, f"View {view_path} missing brand wrapper signature"
             logger.info("Successfully rendered view: %s", view_path)
 
         # 4. HTMX table snippet dynamic loading

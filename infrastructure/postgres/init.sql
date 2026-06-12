@@ -18,14 +18,14 @@ CREATE TABLE IF NOT EXISTS alerts (
     timestamp               TIMESTAMPTZ NOT NULL,
     
     -- Rule information
-    rule_id                 VARCHAR(16) NOT NULL,
+    rule_id                 VARCHAR(128) NOT NULL,
     rule_description        TEXT NOT NULL,
     rule_level              SMALLINT NOT NULL,          -- Wazuh severity 1-15
     rule_groups             TEXT[],                    -- e.g. {authentication_failed, sshd}
     mitre_ids               TEXT[],                    -- e.g. {T1110.001}
     
     -- Agent information
-    agent_id                VARCHAR(16),
+    agent_id                VARCHAR(128),
     agent_name              VARCHAR(128),
     agent_ip                VARCHAR(45),               -- IPv4 or IPv6
     
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS alerts (
     dst_ip                  VARCHAR(45),
     src_port                INTEGER,
     dst_port                INTEGER,
-    protocol                VARCHAR(16),
+    protocol                VARCHAR(64),
     
     -- Identity
     username                VARCHAR(128),
